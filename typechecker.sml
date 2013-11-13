@@ -22,15 +22,16 @@ exception TypeError
  *  the other cases!
  *)
 
+(* Problem 1: Do all these cases. *)
 (* typeOf : env -> TE -> typ *)
 fun typeOf env (Literal x)       = INT
-  | typeOf env (Variable x)      = raise Unimplemented
+  | typeOf env (Variable x)      = VAR x
   | typeOf env (Plus(x, y))      = raise Unimplemented
   | typeOf env (Lambda(i,t,e))   = raise Unimplemented
   | typeOf env (Lett(l,e1,e2))   = raise Unimplemented
   | typeOf env (App(e1,e2))      = raise Unimplemented
   | typeOf env (Rec(i,t,e))      = raise Unimplemented
-  | typeOf env (Bool x)          = raise Unimplemented
+  | typeOf env (Bool x)          = BOOL
   | typeOf env (IsZero(x))       = raise Unimplemented
   | typeOf env (IfThenElse(e1,e2,e3)) =
         let val t1 = typeOf env e1
