@@ -38,7 +38,12 @@ fun typeOf env (Literal x)       = INT
                                       val env1 = update (env l t1)
                                     in typeOf env1 e2
                                   end
-  | typeOf env (App(e1,e2))      = raise Unimplemented
+  | typeOf env (App(e1,e2))      = let val t3 = typeOf env e1
+                                       val t1 = typeOf env e2 
+                                  in case t3 of
+                                      ARROW (a, b) => b
+                                      | _ => raise TypeError
+                                  end
   | typeOf env (Rec(i,t,e))      = let val env1 = update (env i t)
                                       val t1 = typeOf env1 e
                                     in 
@@ -46,11 +51,6 @@ fun typeOf env (Literal x)       = INT
                                       then t1
                                     else raise TypeError
                                     end
-                                    (*let val env1 = update (env i t)
-                                      val t1 = typeOf env1 e
-                                    in 
-                                      typeOf env1 e
-                                    end*)
   | typeOf env (Bool x)          = BOOL
   | typeOf env (IsZero(x))       = let val t1 = typeOf env x
                                     in 
