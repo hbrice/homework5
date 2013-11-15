@@ -19,20 +19,45 @@ exception TypeError
 
 (* 
  *  I have included the code for AST_NUM and AST_IF; you must complete
- *  the other cases!
+ *  the other cases! -Zena
  *)
 
 (* Problem 1: Do all these cases. *)
 (* typeOf : env -> TE -> typ *)
 fun typeOf env (Literal x)       = INT
-  | typeOf env (Variable x)      = VAR x
-  | typeOf env (Plus(x, y))      = raise Unimplemented
+  | typeOf env (Variable x)      = VAR x       
+  | typeOf env (Plus(x, y))      = let val t1 = typeOf env x
+                                       val t2 = typeOf env y 
+                                     in 
+                                      if (t1 = INT) andalso (t2 = INT) 
+                                      then INT
+                                      else raise TypeError
+                                    end
   | typeOf env (Lambda(i,t,e))   = raise Unimplemented
-  | typeOf env (Lett(l,e1,e2))   = raise Unimplemented
+  | typeOf env (Lett(l,e1,e2))   = let val t1 = typeOf env e1
+                                      val env1 = update (env l t1)
+                                    in typeOf env1 e2
+                                  end
   | typeOf env (App(e1,e2))      = raise Unimplemented
-  | typeOf env (Rec(i,t,e))      = raise Unimplemented
+  | typeOf env (Rec(i,t,e))      = let val env1 = update (env i t)
+                                      val t1 = typeOf env1 e
+                                    in 
+                                      if (t1 = t)
+                                      then t1
+                                    else raise TypeError
+                                    end
+                                    (*let val env1 = update (env i t)
+                                      val t1 = typeOf env1 e
+                                    in 
+                                      typeOf env1 e
+                                    end*)
   | typeOf env (Bool x)          = BOOL
-  | typeOf env (IsZero(x))       = raise Unimplemented
+  | typeOf env (IsZero(x))       = let val t1 = typeOf env x
+                                    in 
+                                     if (t1 = INT)
+                                     then BOOL
+                                   else raise TypeError
+                                 end
   | typeOf env (IfThenElse(e1,e2,e3)) =
         let val t1 = typeOf env e1
             val t2 = typeOf env e2
