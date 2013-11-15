@@ -33,7 +33,13 @@ fun typeOf env (Literal x)       = INT
                                       then INT
                                       else raise TypeError
                                     end
-  | typeOf env (Lambda(i,t,e))   = raise Unimplemented
+  | typeOf env (Lambda(i,t,e))   = let val t1 = update(env i t)
+                                    val t2 = typeOf t1 e
+                                    in 
+                                      case t of
+                                       ARROW(a, ARROW(b,c)) => ARROW(b,c)
+                                       | _ => raise TypeError
+                                    end
   | typeOf env (Lett(l,e1,e2))   = let val t1 = typeOf env e1
                                       val env1 = update (env l t1)
                                     in typeOf env1 e2
