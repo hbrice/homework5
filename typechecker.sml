@@ -25,7 +25,7 @@ exception TypeError
 (* Problem 1: Do all these cases. *)
 (* typeOf : env -> TE -> typ *)
 fun typeOf env (Literal x)       = INT
-  | typeOf env (Variable x)      = VAR x       
+  | typeOf env (Variable x)      = env(x)      
   | typeOf env (Plus(x, y))      = let val t1 = typeOf env x
                                        val t2 = typeOf env y 
                                      in 
