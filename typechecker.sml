@@ -36,9 +36,10 @@ fun typeOf env (Literal x)       = INT
   | typeOf env (Lambda(i,t,e))   = let val t1 = update env i t
                                     val t2 = typeOf t1 e
                                     in 
-                                      case t of
+										ARROW(t, t2)
+                                      (*case t of
                                        ARROW(a, b) => b
-                                       | _ => raise TypeError
+                                       | _ => raise TypeError*)
                                     end 
   | typeOf env (Lett(l,e1,e2))   = let val t1 = typeOf env e1
                                       val env1 = update env l t1
