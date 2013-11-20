@@ -25,45 +25,45 @@ exception TypeError
 (* Problem 1: Do all these cases. *)
 (* typeOf : env -> TE -> typ *)
 fun typeOf env (Literal x)       = INT
-  | typeOf env (Variable x)      = env(x)      
+  | typeOf env (Variable x)      = env(x)    
   | typeOf env (Plus(x, y))      = let val t1 = typeOf env x
                                        val t2 = typeOf env y 
                                      in 
                                       if (t1 = INT) andalso (t2 = INT) 
                                       then INT
                                       else raise TypeError
-                                    end
-  | typeOf env (Lambda(i,t,e))   = let val t1 = update(env i t)
+                                    end 
+  | typeOf env (Lambda(i,t,e))   = let val t1 = update env i t
                                     val t2 = typeOf t1 e
                                     in 
                                       case t of
-                                       ARROW(a, ARROW(b,c)) => ARROW(b,c)
+                                       ARROW(a, b) => b
                                        | _ => raise TypeError
-                                    end
+                                    end 
   | typeOf env (Lett(l,e1,e2))   = let val t1 = typeOf env e1
-                                      val env1 = update (env l t1)
+                                      val env1 = update env l t1
                                     in typeOf env1 e2
-                                  end
+                                  end 
   | typeOf env (App(e1,e2))      = let val t3 = typeOf env e1
                                        val t1 = typeOf env e2 
                                   in case t3 of
                                       ARROW (a, b) => b
                                       | _ => raise TypeError
-                                  end
-  | typeOf env (Rec(i,t,e))      = let val env1 = update (env i t)
+                                  end 
+  | typeOf env (Rec(i,t,e))      = let val env1 = update env i t
                                       val t1 = typeOf env1 e
                                     in 
                                       if (t1 = t)
                                       then t1
                                     else raise TypeError
-                                    end
+                                    end 
   | typeOf env (Bool x)          = BOOL
   | typeOf env (IsZero(x))       = let val t1 = typeOf env x
                                     in 
                                      if (t1 = INT)
                                      then BOOL
                                    else raise TypeError
-                                 end
+                                 end 
   | typeOf env (IfThenElse(e1,e2,e3)) =
         let val t1 = typeOf env e1
             val t2 = typeOf env e2
