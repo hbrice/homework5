@@ -118,8 +118,10 @@ fun W (E, Literal n)   = (identity, INT)
 		(y, y t2)
 	  end
 |	W (E, Rec(x, e)) = 
-		let val t = newtypevar()
-			val (y, t) = W (update E x t, e)		
+	   let val t = newtypevar()
+	   val (y1, t2) = W (update E x t, e)
+	   val y2 = unify(y1 t, y1 t2)
+	   val y = y2 o y1
 		in 
 			(y, y t)
 		end
@@ -129,8 +131,7 @@ fun W (E, Literal n)   = (identity, INT)
 			val (y2, t2) = W (y1 o (update E x t1), e2)
 		in
 			(y2 o y1, y2 t2)
-		end
-		;
+		end;
 
 
 (*  Here's a driver program that uses W to find the principal type of e
