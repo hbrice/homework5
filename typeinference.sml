@@ -117,8 +117,20 @@ fun W (E, Literal n)   = (identity, INT)
 	  in
 		(y, y t2)
 	  end
-|	W (E, Rec(x, e)) = raise Unimplemented
-|	W (E, Lett(x, e1, e2)) = raise Unimplemented;
+|	W (E, Rec(x, e)) = 
+		let val t = newtypevar()
+			val (y, t) = W (update E x t, e)		
+		in 
+			(y, y t)
+		end
+		
+|	W (E, Lett(x, e1, e2)) = 
+		let val (y1, t1) = W (E, e1)
+			val (y2, t2) = W (y1 o (update E x t1), e2)
+		in
+			(y2 o y1, y2 t2)
+		end
+		;
 
 
 (*  Here's a driver program that uses W to find the principal type of e
